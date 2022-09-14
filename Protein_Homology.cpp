@@ -6,8 +6,8 @@ using namespace std;
 
 int main(){
 
-    Protein a = Protein("abc");
-    Protein b = Protein("abc");
+    Protein a = Protein("abcabcabc");
+    Protein b = Protein("abcabcabc");
 
     Homology AB;
 

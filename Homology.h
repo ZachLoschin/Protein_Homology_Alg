@@ -48,7 +48,7 @@ string Homology::getHomology(Protein A, Protein B){
 
     // Step 2: Assign each square a path score
     int pathMAT[B.getLength()][A.getLength()];
-    int val, closestI, closestJ, startI, startJ, IJ, JI;
+    int val, closestI, closestJ, startI, startJ, IJ, JI, distI, distJ;
     for(int i=0; i < B.getLength(); i++){
         
         for(int j=0; j < A.getLength(); j++){
@@ -64,6 +64,10 @@ string Homology::getHomology(Protein A, Protein B){
 
             while(loop){
 
+                // CHECK IF ON DA EDGE POR FAVOR
+
+                if(startI == B.getLength()-1 || startJ == A.getLength()-1) break;
+
                 // Initialize closest row values
                 closestI = 1000;
                 closestJ = 1000;
@@ -72,7 +76,7 @@ string Homology::getHomology(Protein A, Protein B){
                 for(int k=startI+1; k < B.getLength(); k++){
                     if(MAT[k][startJ+1] == 1){
                         closestI = k;
-                        IJ = k;
+                        IJ = startJ + 1;
                         break;
                     }
                 }
@@ -80,29 +84,41 @@ string Homology::getHomology(Protein A, Protein B){
                 for(int l=startJ+1; l < A.getLength(); l++){
                     if(MAT[startI+1][l] == 1){
                         closestJ = l;
-                        JI = l;
+                        JI = startI+1;
                         break;
                     }
                 }
 
+                distI = closestI - startI;
+                distJ = closestJ - startJ;
+
                 // Define new starting position
-                if(closestI < closestJ){
+                if(distI < distJ && closestI != 1000){
 
                         startI = closestI;
                         startJ = IJ;
-                   
-                } else if(closestJ < closestI){
+                        cout << "HEREEEEEEEEE *******************";
+                } else if(distJ < distI && closestJ != 1000){
                     
                         startI = JI;
                         startJ = closestJ;
-                    
-                } else if(closestI == closestJ && closestI != 1000 && closestJ != 1000){
-                    
+                        cout << "TTTTTTTTTTTTTTTTHEREEEEEEEEE *******************" << endl;
+                        cout << startI << "    " << startJ << endl;
+                } else if(distI == distJ && closestI != 1000 && closestJ != 1000){
+                    if(closestI < B.getLength() && IJ < A.getLength()){
                         startI = closestI;
                         startJ = IJ;
-
+                        cout << "WWWWWHHHHHHHHHHHHHEREEEEEE *******************";
+                    } else break;
                 } else{
-                    break;
+                    if(startI < B.getLength()-1 && startJ < A.getLength()-1){
+                        startI++;
+                        startJ++;
+                        cout << "WHOOOOOOOOOOOOOOOOOOOOOOOOOOOO *******************";
+                        continue;
+
+                    } else break;
+                    
                 }
 
                 // Added if we succesfully find a new square
